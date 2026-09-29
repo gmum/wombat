@@ -3,6 +3,8 @@
 This repository contains the code used to conduct the experiments mentioned in the paper
 `WOMBAT: Whitebox Oracle for Molecular Benchmarking and Attribution Testing`.
 
+![WOMBAT Teaser](images/wombat_teaser.png)
+
 ## Dataset
 
 The dataset used for validating the whiteboxes (sourced from PubChem, as described in the paper) can be found
@@ -56,6 +58,9 @@ quantitative analysis.
     - Pattern 12: `mpnn/molecule_o_detector.py`
     - Pattern 13: `mpnn/molecule_p_detector.py`
     - Pattern 14: `mpnn/molecule_q_detector.py`
+
+![WOMBAT Teaser](images/krfp_patterns.png)
+
 * The file `mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
   MPNNs. It highlights which elements of the latent vector had values > 0.5, essentially meaning they were activated.
     * It uses a specific notation, where the activation of the n-th element of the latent vector in the i-th layer is
