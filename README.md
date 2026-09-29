@@ -8,10 +8,6 @@ This repository contains the code used to conduct the experiments mentioned in t
 The dataset used for validating the whiteboxes (sourced from PubChem, as described in the paper) can be found
 here: https://huggingface.co/datasets/dmtsh/wombat-smiles
 
-Due to difficulties of anonymizing large datasets, for review purposes we provide a small sample dataset in the
-`pattern_1_sample.parquet`
-file.
-
 ## Repository structure
 
 ### Artifacts
