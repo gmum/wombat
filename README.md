@@ -59,7 +59,7 @@ quantitative analysis.
     - Pattern 13: `mpnn/molecule_p_detector.py`
     - Pattern 14: `mpnn/molecule_q_detector.py`
 
-![WOMBAT Teaser](images/krfp_patterns.png)
+![Patterns](images/krfp_patterns.png)
 
 * The file `mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
   MPNNs. It highlights which elements of the latent vector had values > 0.5, essentially meaning they were activated.
@@ -78,6 +78,10 @@ quantitative analysis.
       detects [CHD2]=NN=[CHD2] SMARTS from KRFP (different from our Patterns). It was created to assess if LLMs could
       possibly allow us to scale WOMBAT to more patterns. We do not discuss it in the paper and XAI methods were not
       tested on it; it's not a part of our main testing suite.
+
+### WOMBAT Whitebox Architecture 
+
+![WOMBAT architecture illustration](images/wombat_arch.png)
 
 ### XAI evaluation
 
