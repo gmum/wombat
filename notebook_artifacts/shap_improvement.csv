@@ -1,0 +1,15 @@
+Index,Whitebox,SHAP 100,SHAP 500,Pattern Size
+0,MoleculeCDetector,0.85,1.0,10
+1,MoleculeEDetector,0.6063829787234043,1.0,14
+2,MoleculeFDetector,0.13636363636363635,1.0,16
+3,MoleculeGDetector,0.6,1.0,13
+4,MoleculeHDetector,0.6451612903225806,1.0,13
+5,MoleculeIDetector,0.78,0.98,6
+6,MoleculeJDetector,0.97,1.0,6
+7,MoleculeKDetector,0.88,0.99,7
+8,MoleculeLDetector,0.97,1.0,7
+9,MoleculeMDetector,0.95,1.0,4
+10,MoleculeNDetector,0.98,0.99,4
+11,MoleculeODetector,1.0,1.0,3
+12,MoleculePDetector,0.99,1.0,5
+13,MoleculeQDetector,1.0,1.0,3

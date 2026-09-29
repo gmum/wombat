@@ -1,0 +1,1 @@
+from .vibe_coded_detector import VibeCodedDetector

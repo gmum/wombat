@@ -1,0 +1,3 @@
+Positive samples: 1146
+Tversky negative samples: 5000
+Random negative samples: 5000

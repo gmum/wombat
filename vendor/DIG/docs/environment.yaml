@@ -1,0 +1,29 @@
+name: 
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.8
+  - pip>=21.0
+  - pip:
+    - rdkit-pypi
+    - https://download.pytorch.org/whl/cpu/torch-1.10.0%2Bcpu-cp38-cp38-linux_x86_64.whl
+    - furo
+    - numpy
+    - sphinx
+    - sphinx_rtd_theme==0.5.2
+    - https://data.pyg.org/whl/torch-1.10.0%2Bcpu/torch_scatter-2.0.9-cp38-cp38-linux_x86_64.whl
+    - https://data.pyg.org/whl/torch-1.10.0%2Bcpu/torch_sparse-0.6.13-cp38-cp38-linux_x86_64.whl
+    - https://data.pyg.org/whl/torch-1.10.0%2Bcpu/torch_cluster-1.6.0-cp38-cp38-linux_x86_64.whl
+    - https://data.pyg.org/whl/torch-1.10.0%2Bcpu/torch_spline_conv-1.2.1-cp38-cp38-linux_x86_64.whl
+    - torch-geometric==2.0.0
+    - git+https://github.com/Chilipp/autodocsumm.git
+    - captum==0.2.0
+    - munch
+    - gdown
+    - cilog
+    - typed-argument-parser==1.5.4 
+    - tensorboard
+    - sympy
+    - pyscf>=1.7.6
+    - hydra-core

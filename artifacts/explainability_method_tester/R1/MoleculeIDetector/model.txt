@@ -1,0 +1,7 @@
+MoleculeIDetector(
+  (mpnn1): MPNN()
+  (mpnn2): MPNN()
+  (readout): AllNonZeroMaxReadout(
+    (nonzero_checker): CheckAllNonZero()
+  )
+)

@@ -1,0 +1,42 @@
+[project]
+name = "wombat"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "captum>=0.9.0",
+    "dive-into-graphs>=1.1.0",
+    "fastparquet>=2026.5.0",
+    "iprogress>=0.4",
+    "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.8",
+    "matplotlib>=3.11.0",
+    "numpy>=2.4.1",
+    "pandas>=3.0.3",
+    "pandas-stubs~=3.0.3",
+    "pyg-lib>=0.7.0",
+    "pymupdf>=1.28.0",
+    "rdkit>=2026.3.3",
+    "scikit-learn>=1.9.0",
+    "scipy-stubs~=1.18.0",
+    "seaborn>=0.13.2",
+    "torch>=2.12.1",
+    "torch-geometric>=2.8.0",
+    "torch-scatter>=2.1.2",
+    "torch-sparse>=0.6.18",
+    "torchvision>=0.27.1",
+]
+
+[[tool.uv.index]]
+name = "pyg-cu130"
+url = "https://data.pyg.org/whl/torch-2.12.0+cu130.html"
+format = "flat"
+explicit = true
+
+
+[tool.uv.sources]
+pyg-lib = { index = "pyg-cu130" }
+torch-scatter = { index = "pyg-cu130" }
+torch-sparse = { index = "pyg-cu130" }
+dive-into-graphs = { path = "vendor/DIG" }
