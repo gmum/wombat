@@ -49,3 +49,10 @@ name_to_post_smarts = {model.__class__.__name__: post for model, _, post in krfp
 # We retain the original names in the codebase to avoid confusion and chaos.
 model_name_to_publication_name = {model.__class__.__name__: f"Pattern {i}" for i, (model, _, _) in
                                   enumerate(krfp_models, start=1)}
+
+# Add mappings from Pattern names as well, so that we can use them interchangeably.
+for model_name, publication_name in list(model_name_to_publication_name.items()):
+    name_to_model[publication_name] = name_to_model[model_name]
+    name_to_pre_smarts[publication_name] = name_to_pre_smarts[model_name]
+    name_to_post_smarts[publication_name] = name_to_post_smarts[model_name]
+    model_name_to_publication_name[publication_name] = publication_name
