@@ -1,0 +1,12 @@
+FluCarbGINE(
+  (x_embedding): Linear(in_features=100, out_features=5, bias=False)
+  (e_embedding): Linear(in_features=4, out_features=5, bias=False)
+  (gine): GINEConv(nn=Sequential(
+    (0): Linear(in_features=5, out_features=2, bias=True)
+    (1): Tanh()
+  ))
+  (readout_mlp): Linear(in_features=2, out_features=1, bias=True)
+  (readout): AllNonZeroReadout(
+    (nonzero_checker): CheckAllNonZero()
+  )
+)
