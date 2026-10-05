@@ -28,23 +28,14 @@ def main():
     artifacts_path = pathlib.Path(f"artifacts/explainability_method_tester/{readout_str}-{timestamp}")
     artifacts_path.mkdir(exist_ok=False, parents=True)
 
-    def ShapSamplingMoreSamples(model, model_smarts, positive_smiles, negative_smiles):
-        return ShapleyValueSamplingAttributionMethod(
-            model=model,
-            model_smarts=model_smarts,
-            positive_smiles=positive_smiles,
-            negative_smiles=negative_smiles,
-            n_samples=500
-        )
-
     methods = [
-        # ("PG Explainer", PGExplainerAttributionMethod),
-        # ("Integrated Gradients", IGAttributionMethod),
-        # ("Saliency", SaliencyAttributionMethod),
-        ("SHAP Sampling", ShapSamplingMoreSamples),
-        # ("Input x Gradient", InputXGradientAttributionMethod),
-        # ("GNN Explainer", GNNExplainerAttributionMethod),
-        # ("SubgraphX", SubgraphXAttributionMethod)
+        ("PG Explainer", PGExplainerAttributionMethod),
+        ("Integrated Gradients", IGAttributionMethod),
+        ("Saliency", SaliencyAttributionMethod),
+        ("SHAP Sampling", ShapleyValueSamplingAttributionMethod),
+        ("Input x Gradient", InputXGradientAttributionMethod),
+        ("GNN Explainer", GNNExplainerAttributionMethod),
+        ("SubgraphX", SubgraphXAttributionMethod)
     ]
 
     for model, _, pattern_smarts in krfp_models:
