@@ -1,1 +1,1 @@
-from highlight_smarts import highlight_atoms_in_mol
+from .highlight_smarts import highlight_atoms_in_mol, visualize_smarts_match
