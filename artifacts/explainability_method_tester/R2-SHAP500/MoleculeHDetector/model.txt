@@ -1,0 +1,11 @@
+MoleculeHDetector(
+  (mpnn1): MPNN()
+  (mpnn2): MPNN()
+  (mpnn3): MPNN()
+  (mpnn4): MPNN()
+  (mpnn5): MPNN()
+  (mpnn6): MPNN()
+  (readout): AllNonZeroReadout(
+    (nonzero_checker): CheckAllNonZero()
+  )
+)

@@ -1,0 +1,6 @@
+MoleculeODetector(
+  (mpnn1): MPNN()
+  (readout): AllNonZeroReadout(
+    (nonzero_checker): CheckAllNonZero()
+  )
+)
