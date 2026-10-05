@@ -19,7 +19,7 @@ from rdkit import Chem, RDLogger
 
 RDLogger.DisableLog("rdApp.*")
 
-from highlight_smarts import highlight_atoms_in_mol
+from ground_truth.highlight_smarts import highlight_atoms_in_mol
 from krfp_models import krfp_models, model_name_to_publication_name
 from mpnn import mol_to_torch
 from dataset import PubchemProcessedSMILESDataset

@@ -3,7 +3,7 @@ import torch
 import pathlib
 import warnings
 
-from highlight_smarts import highlight_atoms_in_mol
+from ground_truth.highlight_smarts import highlight_atoms_in_mol
 from mpnn.gine_experiments import FluCarbGINE
 from mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
     SmoothingMoleculeODetector

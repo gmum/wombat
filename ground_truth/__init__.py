@@ -1,0 +1,1 @@
+from highlight_smarts import highlight_atoms_in_mol
