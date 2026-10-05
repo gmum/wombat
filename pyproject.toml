@@ -39,4 +39,4 @@ explicit = true
 pyg-lib = { index = "pyg-cu130" }
 torch-scatter = { index = "pyg-cu130" }
 torch-sparse = { index = "pyg-cu130" }
-dive-into-graphs = { path = "vendor/DIG" }
+dive-into-graphs = { path = "vendor/DIG" } # We do it this way, because we've modified the source code of DIG to avoid a dependency problem. This effectively breaks part of DIG! We use DIG only for SubgraphX implementation, however.
