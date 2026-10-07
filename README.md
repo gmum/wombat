@@ -3,6 +3,8 @@
 This repository contains the code used to conduct the experiments mentioned in the paper
 `WOMBAT: Whitebox Oracle for Molecular Benchmarking and Attribution Testing`.
 
+The paper is available here: https://arxiv.org/abs/2610.00713
+
 ![WOMBAT Teaser](images/wombat_teaser.png)
 
 ## Dataset
@@ -29,7 +31,7 @@ quantitative analysis.
 * `scripts/filter_dataset_local.py` filters the aforementioned CSV file (as described in the paper) and generates ECFP4
   fingerprints for all molecules.
 
-* `dataset/pubchem_processed_smiles_dataset.py` contains the code used to sample from all the filtered PubChem molecules
+* `wombat/dataset/pubchem_processed_smiles_dataset.py` contains the code used to sample from all the filtered PubChem molecules
   to create whitebox validation datasets (as described in the paper).
 
 * `run_benchmark.py` run the benchmark. Note that this file can be modified to test different XAI methods to your
@@ -37,44 +39,44 @@ quantitative analysis.
 
 ### Whiteboxes
 
-* The MPNN architecture (as described in the paper) is implemented in `mpnn/mpnn_arch.py`; the input encoding is located
-  in `mpnn/molecule_converter.py`.
+* The MPNN architecture (as described in the paper) is implemented in `wombat/mpnn/mpnn_arch.py`; the input encoding is located
+  in `wombat/mpnn/molecule_converter.py`.
 
-* The whitebox validation code is located in the files `test.py` and `mpnn/validate_whiteboxes.py`.
+* The whitebox validation code is located in the files `test.py` and `wombat/mpnn/validate_whiteboxes.py`.
 
 * Whiteboxes for specific patterns (as described in the paper) are localised in the following files:
 
-    - Pattern 1: `mpnn/molecule_c_detector.py`
-    - Pattern 2: `mpnn/molecule_e_detector.py`
-    - Pattern 3: `mpnn/molecule_f_detector.py`
-    - Pattern 4: `mpnn/molecule_g_detector.py`
-    - Pattern 5: `mpnn/molecule_h_detector.py`
-    - Pattern 6: `mpnn/molecule_i_detector.py`
-    - Pattern 7: `mpnn/molecule_j_detector.py`
-    - Pattern 8: `mpnn/molecule_k_detector.py`
-    - Pattern 9: `mpnn/molecule_l_detector.py`
-    - Pattern 10: `mpnn/molecule_m_detector.py`
-    - Pattern 11: `mpnn/molecule_n_detector.py`
-    - Pattern 12: `mpnn/molecule_o_detector.py`
-    - Pattern 13: `mpnn/molecule_p_detector.py`
-    - Pattern 14: `mpnn/molecule_q_detector.py`
+    - Pattern 1: `wombat/mpnn/molecule_c_detector.py`
+    - Pattern 2: `wombat/mpnn/molecule_e_detector.py`
+    - Pattern 3: `wombat/mpnn/molecule_f_detector.py`
+    - Pattern 4: `wombat/mpnn/molecule_g_detector.py`
+    - Pattern 5: `wombat/mpnn/molecule_h_detector.py`
+    - Pattern 6: `wombat/mpnn/molecule_i_detector.py`
+    - Pattern 7: `wombat/mpnn/molecule_j_detector.py`
+    - Pattern 8: `wombat/mpnn/molecule_k_detector.py`
+    - Pattern 9: `wombat/mpnn/molecule_l_detector.py`
+    - Pattern 10: `wombat/mpnn/molecule_m_detector.py`
+    - Pattern 11: `wombat/mpnn/molecule_n_detector.py`
+    - Pattern 12: `wombat/mpnn/molecule_o_detector.py`
+    - Pattern 13: `wombat/mpnn/molecule_p_detector.py`
+    - Pattern 14: `wombat/mpnn/molecule_q_detector.py`
 
 ![Patterns](images/krfp_patterns.png)
 
-* The file `mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
+* The file `wombat/mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
   MPNNs. It highlights which elements of the latent vector had values > 0.5, essentially meaning they were activated.
     * It uses a specific notation, where the activation of the n-th element of the latent vector in the i-th layer is
       denoted as `{N-th letter of the alphabet}.{i}`. For example, `F.2` would be the sixth element of the activation
       vector after the second MPNN layer.
-* Models, along with their respective SMARTS, can be found in the file `krfp_models.py`.
-* `krfp_smarts.json` contains all KRFP SMARTS; `krfp_vis.py` is a helper script to visualise them (we used it to pick
+* Models, along with their respective SMARTS, can be found in the file `wombat/krfp_models.py`.
+* `scripts/krfp_smarts.json` contains all KRFP SMARTS; `scripts/krfp_vis.py` is a helper script to visualise them (we used it to pick
   acyclical motifs that seemed tractable).
 * Furthermore, there are additional models included (not parts of the main testing suite):
-    * `mpnn/gine_experiments` contains GINE-Flucarb whitebox (described in the paper), which uses a different
-      architecture (validated in `test_flucarb_gine.py`).
-    * `mpnn/molecule_o_variants` contains different variants of whiteboxes detecting Pattern 12 (validated in
+    * `wombat/mpnn/gine_experiments` contains GINE-Flucarb whitebox (described in the paper), which uses a different
+      architecture (validated in `scripts/test_flucarb_gine.py`).
+    * `wombat/mpnn/molecule_o_variants` contains different variants of whiteboxes detecting Pattern 12 (validated in
       `test_mol_o_variants.py`).
-    * `mpnn/vibe_coding` -- created by GPT-5.6 Sol (validated in `test_vibecoded_whiteboxes.py`). This whitebox
+    * `wombat/mpnn/vibe_coding` -- created by GPT-5.6 Sol (validated in `test_vibecoded_whiteboxes.py`). This whitebox
       detects [CHD2]=NN=[CHD2] SMARTS from KRFP (different from our Patterns). It was created to assess if LLMs could
       possibly allow us to scale WOMBAT to more patterns. We do not discuss it in the paper and XAI methods were not
       tested on it; it's not a part of our main testing suite.
@@ -85,12 +87,12 @@ quantitative analysis.
 
 ### XAI evaluation
 
-* `ground_truth/highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
+* `wombat/ground_truth/highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
 
-* The directory `xai_methods` contains classes implementing the `AttributionMethod` interface, returning the
+* The directory `wombat/xai_methods` contains classes implementing the `AttributionMethod` interface, returning the
   attributions of a given model according to a specific XAI method.
 
-* The directory `xai_testers` contains `explainability_method_tester.py`, which performs tests of all explainability
+* The directory `wombat/xai_testers` contains `explainability_method_tester.py`, which performs tests of all explainability
   methods (as described in the paper) and saves them (with a timestamp) to the `artifacts/explainability_method_tester`
   directory. It also contains `gnn_explainer_grid.py` and `pgexplainer_grid.py`, used to test more specific
   hyperparameters of these explainers.
