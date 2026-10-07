@@ -9,8 +9,8 @@ from rdkit import RDLogger
 from rdkit.Chem import rdFingerprintGenerator
 from tqdm import tqdm
 
-from krfp_models import krfp_models
-from mpnn.validate_whiteboxes import drop_molecule
+from wombat.krfp_models import krfp_models
+from wombat.mpnn.validate_whiteboxes import drop_molecule
 
 
 def process_chunk(chunk: pd.DataFrame, chunk_idx: int, base_path: pathlib.Path):

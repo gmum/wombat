@@ -5,9 +5,9 @@ import torch
 
 from rdkit import RDLogger
 
-from mpnn import validate_whitebox
-from krfp_models import krfp_models
-from mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
+from wombat.mpnn import validate_whitebox
+from wombat.krfp_models import krfp_models
+from wombat.mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
     SmoothingMoleculeODetector
 
 RDLogger.DisableLog("rdApp.*")

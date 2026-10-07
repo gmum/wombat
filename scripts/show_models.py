@@ -1,13 +1,12 @@
 from itertools import zip_longest
 
-import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-from mpnn import mol_to_torch, visualize_activations, visualize_all_activations
+from wombat.mpnn import mol_to_torch, visualize_activations, visualize_all_activations
 from matplotlib import pyplot as plt
 
-from krfp_models import krfp_models, model_name_to_publication_name
+from wombat.krfp_models import krfp_models, model_name_to_publication_name
 
 
 def main():

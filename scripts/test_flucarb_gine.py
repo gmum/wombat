@@ -2,16 +2,13 @@ import pathlib
 
 import pandas as pd
 import torch
-from matplotlib import pyplot as plt
 
-from mpnn.gine_experiments import FluCarbGINE
-from mpnn.validate_whiteboxes import drop_molecule
+from wombat.mpnn.gine_experiments import FluCarbGINE
+from wombat.mpnn.validate_whiteboxes import drop_molecule
 
 from rdkit import RDLogger, Chem
-from rdkit.Chem import Draw
 
-from mpnn import validate_whitebox
-from mpnn.vibe_coding import VibeCodedDetector
+from wombat.mpnn import validate_whitebox
 
 RDLogger.DisableLog("rdApp.*")
 

@@ -3,10 +3,10 @@ import torch
 import pathlib
 import warnings
 
-from mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
+from wombat.mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
     SmoothingMoleculeODetector
-from mpnn.mpnn_arch import AllNonZeroMaxReadout, AllNonZeroReadout
-from xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
+from wombat.mpnn.mpnn_arch import AllNonZeroMaxReadout, AllNonZeroReadout
+from wombat.xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
 
 warnings.filterwarnings("ignore")
 
@@ -14,11 +14,11 @@ from rdkit import RDLogger
 
 RDLogger.DisableLog("rdApp.*")
 
-from krfp_models import krfp_models, model_name_to_publication_name
-from xai_methods import IGAttributionMethod, PGExplainerAttributionMethod, GNNExplainerAttributionMethod, \
+from wombat.krfp_models import krfp_models, model_name_to_publication_name
+from wombat.xai_methods import IGAttributionMethod, PGExplainerAttributionMethod, GNNExplainerAttributionMethod, \
     InputXGradientAttributionMethod, SaliencyAttributionMethod, AttributionMethod
-from xai_methods.captum_attributions import ShapleyValueSamplingAttributionMethod
-from xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
+from wombat.xai_methods.captum_attributions import ShapleyValueSamplingAttributionMethod
+from wombat.xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
     NegativeExplainabilityMethodTester, \
     get_split_into_positive_and_negative_smiles
 

@@ -5,8 +5,8 @@ import torch
 
 from rdkit import RDLogger
 
-from mpnn import validate_whitebox
-from krfp_models import krfp_models
+from wombat.mpnn import validate_whitebox
+from wombat.krfp_models import krfp_models, model_name_to_publication_name
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -19,7 +19,7 @@ def main():
 
     for model, _, smarts in krfp_models:
         model_name = model.__class__.__name__
-        df = pd.read_csv(pathlib.Path("data/validation_datasets") / f"{model_name}.csv")
+        df = pd.read_parquet(pathlib.Path("wombat-smiles") / f"validation_datasets/{model_name_to_publication_name[model_name]}/validation_molecules.parquet")
         smiles = df["SMILES"].tolist()
         labels = df[model_name].tolist()
         origins = df["ORIGIN"]

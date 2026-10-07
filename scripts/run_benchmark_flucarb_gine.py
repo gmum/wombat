@@ -3,12 +3,9 @@ import torch
 import pathlib
 import warnings
 
-from ground_truth.highlight_smarts import highlight_atoms_in_mol
-from mpnn.gine_experiments import FluCarbGINE
-from mpnn.molecule_o_variants import LeafActivatedMoleculeODetector, ActivationMovingMoleculeODetector, \
-    SmoothingMoleculeODetector
-from mpnn.mpnn_arch import AllNonZeroMaxReadout, AllNonZeroReadout
-from xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
+from wombat.ground_truth.highlight_smarts import highlight_atoms_in_mol
+from wombat.mpnn.gine_experiments import FluCarbGINE
+from wombat.xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
 
 warnings.filterwarnings("ignore")
 
@@ -16,13 +13,8 @@ from rdkit import RDLogger, Chem
 
 RDLogger.DisableLog("rdApp.*")
 
-from krfp_models import krfp_models, model_name_to_publication_name
-from xai_methods import IGAttributionMethod, PGExplainerAttributionMethod, GNNExplainerAttributionMethod, \
-    InputXGradientAttributionMethod, SaliencyAttributionMethod, AttributionMethod
-from xai_methods.captum_attributions import ShapleyValueSamplingAttributionMethod
-from xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
-    NegativeExplainabilityMethodTester, \
-    get_split_into_positive_and_negative_smiles
+from wombat.xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
+    NegativeExplainabilityMethodTester
 from test_flucarb_gine import get_labels
 
 

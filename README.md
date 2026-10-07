@@ -24,9 +24,9 @@ quantitative analysis.
 
 ### Dataset preparation
 
-* `create_dataset_local.py` converts `ttl.gz` files downloaded from PubChem's FTP server into a CSV.
+* `scripts/create_dataset_local.py` converts `ttl.gz` files downloaded from PubChem's FTP server into a CSV.
 
-* `filter_dataset_local.py` filters the aforementioned CSV file (as described in the paper) and generates ECFP4
+* `scripts/filter_dataset_local.py` filters the aforementioned CSV file (as described in the paper) and generates ECFP4
   fingerprints for all molecules.
 
 * `dataset/pubchem_processed_smiles_dataset.py` contains the code used to sample from all the filtered PubChem molecules
@@ -85,7 +85,7 @@ quantitative analysis.
 
 ### XAI evaluation
 
-* `highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
+* `ground_truth/highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
 
 * The directory `xai_methods` contains classes implementing the `AttributionMethod` interface, returning the
   attributions of a given model according to a specific XAI method.
@@ -95,18 +95,18 @@ quantitative analysis.
   directory. It also contains `gnn_explainer_grid.py` and `pgexplainer_grid.py`, used to test more specific
   hyperparameters of these explainers.
 
-### Misc
+### Notebooks
 
-* `create_figures.ipynb` is used to show the distributions of Tanimoto and Tversky distances towards specific patterns
+* Notebooks used to perform some paper's analyses are provided in the `notebooks` directory. Among others:
+* `notebooks/create_figures.ipynb` is used to show the distributions of Tanimoto and Tversky distances towards specific patterns
   and to generate tables for the main results.
-* `gnn_explainer_grid.ipynb` and `pge_grid_results.ipynb` are used to analyse the results of GNN Explainer and PGE
+* `notebooks/gnn_explainer_grid.ipynb` and `notebooks/pge_grid_results.ipynb` are used to analyse the results of GNN Explainer and PGE
   Explainer.
-* `show_explanations.ipynb` is used to generate an example explanation for visualisation purposes in the paper. It
-  relies on the `datavis.py` file.
-* For further qualitative analysis on Integrated Gradients, the notebooks `ig_fails_pattern_4.ipynb` and
-  `ig_fails_pattern_5.ipynb` are also provided.
-* We analyse PGExplainer's shortcut problem in `pge_shortcut.ipynb`.
+* `notebooks/show_explanations.ipynb` is used to generate an example explanation for visualisation purposes in the paper.
+* For further qualitative analysis on Integrated Gradients, the notebooks `notebooks/ig_fails_pattern_4.ipynb` and
+  `notebooks/ig_fails_pattern_5.ipynb` are also provided.
+* We analyse PGExplainer's shortcut problem in `notebooks/pge_shortcut.ipynb`.
 * We analyse results of the "atypical" whiteboxes (i.e. the ones with different weight settings) in
-  `results_for_atypical_whiteboxes.ipynb`.
-* We calculate correlation between original and relaxed SMARTS in `smarts_correlation.ipynb`.
-* We check for any differences in ground truth after relaxation of SMARTS for Pattern 3 and 5 in `gt_match.ipynb`.
+  `notebooks/results_for_atypical_whiteboxes.ipynb`.
+* We calculate correlation between original and relaxed SMARTS in `notebooks/smarts_correlation.ipynb`.
+* We check for any differences in ground truth after relaxation of SMARTS for Pattern 3 and 5 in `notebooks/gt_match.ipynb`.

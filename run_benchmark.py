@@ -3,8 +3,8 @@ import torch
 import pathlib
 import warnings
 
-from mpnn.mpnn_arch import AllNonZeroMaxReadout, AllNonZeroReadout
-from xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
+from wombat.mpnn.mpnn_arch import AllNonZeroMaxReadout, AllNonZeroReadout
+from wombat.xai_methods.subgraph_x_attributions import SubgraphXAttributionMethod
 
 warnings.filterwarnings("ignore")
 
@@ -12,11 +12,11 @@ from rdkit import RDLogger
 
 RDLogger.DisableLog("rdApp.*")
 
-from krfp_models import krfp_models, model_name_to_publication_name
-from xai_methods import IGAttributionMethod, PGExplainerAttributionMethod, GNNExplainerAttributionMethod, \
+from wombat.krfp_models import krfp_models, model_name_to_publication_name
+from wombat.xai_methods import IGAttributionMethod, PGExplainerAttributionMethod, GNNExplainerAttributionMethod, \
     InputXGradientAttributionMethod, SaliencyAttributionMethod, AttributionMethod
-from xai_methods.captum_attributions import ShapleyValueSamplingAttributionMethod
-from xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
+from wombat.xai_methods.captum_attributions import ShapleyValueSamplingAttributionMethod
+from wombat.xai_testers.explainability_method_tester import PositiveExplainabilityMethodTester, \
     NegativeExplainabilityMethodTester, \
     get_split_into_positive_and_negative_smiles
 
@@ -73,7 +73,13 @@ def main():
             )
 
             positive_cutoff = 100 if (method_name == "SHAP Sampling" or method_name == "SubgraphX") else None
-            negative_cutoff = 1 if (method_name == "SHAP Sampling" or method_name == "SubgraphX") else None
+
+            if method_name == "SubgraphX":
+                negative_cutoff = 1
+            elif method_name == "SHAP Sampling":
+                negative_cutoff = 100
+            else:
+                negative_cutoff = None
 
             iqr_successes, node_attrs_all_negative, edge_attrs_all_negative = negative_tester.evaluate_explainability_method(
                 method, add_hydrogen_ohe=True, cutoff=negative_cutoff)
