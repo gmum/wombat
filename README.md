@@ -112,3 +112,33 @@ quantitative analysis.
   `notebooks/results_for_atypical_whiteboxes.ipynb`.
 * We calculate correlation between original and relaxed SMARTS in `notebooks/smarts_correlation.ipynb`.
 * We check for any differences in ground truth after relaxation of SMARTS for Pattern 3 and 5 in `notebooks/gt_match.ipynb`.
+
+## Acknowledgements
+
+This work was funded by "Interpretable and Interactive Multimodal Retrieval in Drug Discovery" project. The
+„Interpretable and Interactive Multimodal Retrieval in Drug Discovery” project (FENG.02.02-IP.05-0040/23) is carried out
+within the First Team programme of the Foundation for Polish Science co-financed by the European Union under the
+European Funds for Smart Economy 2021-2027 (FENG).
+
+## Environmental statement
+
+### Number of pretrained models used
+
+We did not use any pretrained models for this work.
+
+### Number of models trained from scratch
+
+We do not train any GNNs or Transformers from scratch, and we do not train any compute-intensive deep learning model for
+this work. However, for transparency purposes, we would like to note that during the course
+of this work, we've created:
+
+* A dozen _handmade_ GNN models. These had their weights set manually by a human and were not computationally trained on
+  either a CPU or a GPU. As such, we don't classify them as `trained from scratch`, as they were not trained in the traditional sense.
+  Their weights are defined in the `mpnn/molecule_{letter}_detector.py` files.
+* During the course of this work, we've used PGExplainer [1]. PGExplainer is a common graph explainability method, which is based on a small
+  Multi-Layer Perceptron (MLP), which is technically a model and requires training (
+  see [documentation](https://pytorch-geometric.readthedocs.io/en/2.5.1/_modules/torch_geometric/explain/algorithm/pg_explainer.html#PGExplainer.train)).
+  Training implementation can be found in `xai_methods/pyg_attributions.py` in the `PGExplainerAttributionMethod` class. Many PGExplainers were trained during the course of this work; however, because of their tiny size and the fact that they were trained using only a CPU, we don't classify PGExplainers as "models trained from scratch" metric. 
+
+[1] Luo, D., Cheng, W., Xu, D., Yu, W., Zong, B., Chen, H., & Zhang, X. (2020). Parameterized explainer for graph neural
+network. Advances in neural information processing systems, 33, 19620-19631.
