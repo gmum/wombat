@@ -1,7 +1,7 @@
 [project]
-name = "wombat"
-version = "0.1.0"
-description = "Add your description here"
+name = "wombat-gnn"
+version = "1.0.0"
+description = "WOMBAT: Whitebox Oracle for Molecular Benchmarking and Attribution Testing"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
