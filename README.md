@@ -15,6 +15,19 @@ The `vendor/DIG/` directory contains a slightly modified version of the DIG libr
 
 We use DIG exclusively for its implementation of SubgraphX, one of the XAI methods benchmarked in WOMBAT.
 
+## Installation
+
+Install [uv](https://docs.astral.sh/uv), then run:
+
+```bash
+uv sync
+```
+
+## Dataset
+
+The dataset used for validating the whiteboxes (sourced from PubChem, as described in the paper) can be found
+here: https://huggingface.co/datasets/dmtsh/wombat-smiles
+
 ## Example code
 
 ### Using WOMBAT whiteboxes
@@ -106,11 +119,6 @@ aurocs, aps, ap_baselines, node_attrs_all_positive, edge_attrs_all_positive = te
 
 print(aurocs) # [1.0, 1.0]
 ```
-
-## Dataset
-
-The dataset used for validating the whiteboxes (sourced from PubChem, as described in the paper) can be found
-here: https://huggingface.co/datasets/dmtsh/wombat-smiles
 
 ## Repository structure
 
