@@ -3,7 +3,109 @@
 This repository contains the code used to conduct the experiments mentioned in the paper
 `WOMBAT: Whitebox Oracle for Molecular Benchmarking and Attribution Testing`.
 
+The paper is available here: https://arxiv.org/abs/2610.00713
+
 ![WOMBAT Teaser](images/wombat_teaser.png)
+
+## License
+
+WOMBAT is licensed under the MIT License, except for third-party code in the `vendor/` directory.
+
+The `vendor/DIG/` directory contains a slightly modified version of the DIG library, licensed under the **GNU General Public License, Version 3 (GPLv3)**. Its license can be found in `vendor/DIG/LICENSE`.
+
+We use DIG exclusively for its implementation of SubgraphX, one of the XAI methods benchmarked in WOMBAT.
+
+## Example code
+
+### Using WOMBAT whiteboxes
+
+```python
+from rdkit import Chem
+
+from wombat.mpnn import Pattern12Detector
+from wombat.mpnn import mol_to_torch
+
+model = Pattern12Detector() # By default, we use the r2 readout.
+
+mol1 = Chem.MolFromSmiles("CC=O") # Will activate the model
+mol2 = Chem.MolFromSmiles("CC(C)=O") # Will not activate the model
+
+x, edge_index, edge_features = mol_to_torch(mol1)
+print(model(x, edge_features, edge_index)) # Output: 1.0
+
+x, edge_index, edge_features = mol_to_torch(mol2)
+print(model(x, edge_features, edge_index)) # Output: 0.0
+```
+
+### Using XAI methods to explain WOMBAT whiteboxes
+
+```python
+import torch
+
+from rdkit import Chem
+from matplotlib import pyplot as plt
+
+from wombat.mpnn import Pattern12Detector
+from wombat.mpnn import mol_to_torch
+from wombat.visualisation import visualize_atom_importance_from_mol
+
+from wombat.xai_methods import IGAttributionMethod
+from wombat.krfp_models import name_to_post_smarts
+
+model = Pattern12Detector()
+mol = Chem.MolFromSmiles("FNC=O")
+x, edge_index, edge_features = mol_to_torch(mol)
+
+ig_explainer = IGAttributionMethod(
+    model=model,
+    model_smarts=name_to_post_smarts["Pattern 12"],
+    positive_smiles=[], # Required by the API, but not needed for IG. It's only for methods that need training beforehand.
+    negative_smiles=[],
+)
+
+atom_importance, _ = ig_explainer.explain(x, edge_features, edge_index)
+atom_importance = torch.sum(torch.abs(atom_importance), dim=1).cpu().numpy().tolist()
+
+img = visualize_atom_importance_from_mol(
+    mol,
+    atom_importance,
+    length=1000,
+)
+
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+```
+
+### Evaluating XAI methods
+
+```python 
+from wombat.mpnn import Pattern12Detector
+from wombat.xai_methods import IGAttributionMethod
+from wombat.krfp_models import name_to_post_smarts
+from wombat.xai_testers import PositiveExplainabilityMethodTester
+
+model = Pattern12Detector()
+
+ig_explainer = IGAttributionMethod(
+    model=model,
+    model_smarts=name_to_post_smarts["Pattern 12"],
+    positive_smiles=[], # Required by the API, but not needed for IG. It's only for methods that need training beforehand.
+    negative_smiles=[],
+)
+
+tester = PositiveExplainabilityMethodTester(
+    model=model,
+    smiles_list=["FNC=O", "CCC=O"],
+    pattern_smarts=name_to_post_smarts["Pattern 12"]
+)
+
+aurocs, aps, ap_baselines, node_attrs_all_positive, edge_attrs_all_positive = tester.evaluate_explainability_method(
+    ig_explainer
+)
+
+print(aurocs) # [1.0, 1.0]
+```
 
 ## Dataset
 
@@ -24,12 +126,12 @@ quantitative analysis.
 
 ### Dataset preparation
 
-* `create_dataset_local.py` converts `ttl.gz` files downloaded from PubChem's FTP server into a CSV.
+* `scripts/create_dataset_local.py` converts `ttl.gz` files downloaded from PubChem's FTP server into a CSV.
 
-* `filter_dataset_local.py` filters the aforementioned CSV file (as described in the paper) and generates ECFP4
+* `scripts/filter_dataset_local.py` filters the aforementioned CSV file (as described in the paper) and generates ECFP4
   fingerprints for all molecules.
 
-* `dataset/pubchem_processed_smiles_dataset.py` contains the code used to sample from all the filtered PubChem molecules
+* `wombat/dataset/pubchem_processed_smiles_dataset.py` contains the code used to sample from all the filtered PubChem molecules
   to create whitebox validation datasets (as described in the paper).
 
 * `run_benchmark.py` run the benchmark. Note that this file can be modified to test different XAI methods to your
@@ -37,44 +139,44 @@ quantitative analysis.
 
 ### Whiteboxes
 
-* The MPNN architecture (as described in the paper) is implemented in `mpnn/mpnn_arch.py`; the input encoding is located
-  in `mpnn/molecule_converter.py`.
+* The MPNN architecture (as described in the paper) is implemented in `wombat/mpnn/mpnn_arch.py`; the input encoding is located
+  in `wombat/mpnn/molecule_converter.py`.
 
-* The whitebox validation code is located in the files `test.py` and `mpnn/validate_whiteboxes.py`.
+* The whitebox validation code is located in the files `test.py` and `wombat/mpnn/validate_whiteboxes.py`.
 
 * Whiteboxes for specific patterns (as described in the paper) are localised in the following files:
 
-    - Pattern 1: `mpnn/molecule_c_detector.py`
-    - Pattern 2: `mpnn/molecule_e_detector.py`
-    - Pattern 3: `mpnn/molecule_f_detector.py`
-    - Pattern 4: `mpnn/molecule_g_detector.py`
-    - Pattern 5: `mpnn/molecule_h_detector.py`
-    - Pattern 6: `mpnn/molecule_i_detector.py`
-    - Pattern 7: `mpnn/molecule_j_detector.py`
-    - Pattern 8: `mpnn/molecule_k_detector.py`
-    - Pattern 9: `mpnn/molecule_l_detector.py`
-    - Pattern 10: `mpnn/molecule_m_detector.py`
-    - Pattern 11: `mpnn/molecule_n_detector.py`
-    - Pattern 12: `mpnn/molecule_o_detector.py`
-    - Pattern 13: `mpnn/molecule_p_detector.py`
-    - Pattern 14: `mpnn/molecule_q_detector.py`
+    - Pattern 1: `wombat/mpnn/molecule_c_detector.py`
+    - Pattern 2: `wombat/mpnn/molecule_e_detector.py`
+    - Pattern 3: `wombat/mpnn/molecule_f_detector.py`
+    - Pattern 4: `wombat/mpnn/molecule_g_detector.py`
+    - Pattern 5: `wombat/mpnn/molecule_h_detector.py`
+    - Pattern 6: `wombat/mpnn/molecule_i_detector.py`
+    - Pattern 7: `wombat/mpnn/molecule_j_detector.py`
+    - Pattern 8: `wombat/mpnn/molecule_k_detector.py`
+    - Pattern 9: `wombat/mpnn/molecule_l_detector.py`
+    - Pattern 10: `wombat/mpnn/molecule_m_detector.py`
+    - Pattern 11: `wombat/mpnn/molecule_n_detector.py`
+    - Pattern 12: `wombat/mpnn/molecule_o_detector.py`
+    - Pattern 13: `wombat/mpnn/molecule_p_detector.py`
+    - Pattern 14: `wombat/mpnn/molecule_q_detector.py`
 
 ![Patterns](images/krfp_patterns.png)
 
-* The file `mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
+* The file `wombat/mpnn/visualize_activations.py` contains functions that can be used to visualise internal activations in
   MPNNs. It highlights which elements of the latent vector had values > 0.5, essentially meaning they were activated.
     * It uses a specific notation, where the activation of the n-th element of the latent vector in the i-th layer is
       denoted as `{N-th letter of the alphabet}.{i}`. For example, `F.2` would be the sixth element of the activation
       vector after the second MPNN layer.
-* Models, along with their respective SMARTS, can be found in the file `krfp_models.py`.
-* `krfp_smarts.json` contains all KRFP SMARTS; `krfp_vis.py` is a helper script to visualise them (we used it to pick
+* Models, along with their respective SMARTS, can be found in the file `wombat/krfp_models.py`.
+* `scripts/krfp_smarts.json` contains all KRFP SMARTS; `scripts/krfp_vis.py` is a helper script to visualise them (we used it to pick
   acyclical motifs that seemed tractable).
 * Furthermore, there are additional models included (not parts of the main testing suite):
-    * `mpnn/gine_experiments` contains GINE-Flucarb whitebox (described in the paper), which uses a different
-      architecture (validated in `test_flucarb_gine.py`).
-    * `mpnn/molecule_o_variants` contains different variants of whiteboxes detecting Pattern 12 (validated in
+    * `wombat/mpnn/gine_experiments` contains GINE-Flucarb whitebox (described in the paper), which uses a different
+      architecture (validated in `scripts/test_flucarb_gine.py`).
+    * `wombat/mpnn/molecule_o_variants` contains different variants of whiteboxes detecting Pattern 12 (validated in
       `test_mol_o_variants.py`).
-    * `mpnn/vibe_coding` -- created by GPT-5.6 Sol (validated in `test_vibecoded_whiteboxes.py`). This whitebox
+    * `wombat/mpnn/vibe_coding` -- created by GPT-5.6 Sol (validated in `test_vibecoded_whiteboxes.py`). This whitebox
       detects [CHD2]=NN=[CHD2] SMARTS from KRFP (different from our Patterns). It was created to assess if LLMs could
       possibly allow us to scale WOMBAT to more patterns. We do not discuss it in the paper and XAI methods were not
       tested on it; it's not a part of our main testing suite.
@@ -85,28 +187,58 @@ quantitative analysis.
 
 ### XAI evaluation
 
-* `highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
+* `wombat/ground_truth/highlight_smarts.py` is used to derive the ground truth from SMARTS strings.
 
-* The directory `xai_methods` contains classes implementing the `AttributionMethod` interface, returning the
+* The directory `wombat/xai_methods` contains classes implementing the `AttributionMethod` interface, returning the
   attributions of a given model according to a specific XAI method.
 
-* The directory `xai_testers` contains `explainability_method_tester.py`, which performs tests of all explainability
+* The directory `wombat/xai_testers` contains `explainability_method_tester.py`, which performs tests of all explainability
   methods (as described in the paper) and saves them (with a timestamp) to the `artifacts/explainability_method_tester`
   directory. It also contains `gnn_explainer_grid.py` and `pgexplainer_grid.py`, used to test more specific
   hyperparameters of these explainers.
 
-### Misc
+### Notebooks
 
-* `create_figures.ipynb` is used to show the distributions of Tanimoto and Tversky distances towards specific patterns
+* Notebooks used to perform some paper's analyses are provided in the `notebooks` directory. Among others:
+* `notebooks/create_figures.ipynb` is used to show the distributions of Tanimoto and Tversky distances towards specific patterns
   and to generate tables for the main results.
-* `gnn_explainer_grid.ipynb` and `pge_grid_results.ipynb` are used to analyse the results of GNN Explainer and PGE
+* `notebooks/gnn_explainer_grid.ipynb` and `notebooks/pge_grid_results.ipynb` are used to analyse the results of GNN Explainer and PGE
   Explainer.
-* `show_explanations.ipynb` is used to generate an example explanation for visualisation purposes in the paper. It
-  relies on the `datavis.py` file.
-* For further qualitative analysis on Integrated Gradients, the notebooks `ig_fails_pattern_4.ipynb` and
-  `ig_fails_pattern_5.ipynb` are also provided.
-* We analyse PGExplainer's shortcut problem in `pge_shortcut.ipynb`.
+* `notebooks/show_explanations.ipynb` is used to generate an example explanation for visualisation purposes in the paper.
+* For further qualitative analysis on Integrated Gradients, the notebooks `notebooks/ig_fails_pattern_4.ipynb` and
+  `notebooks/ig_fails_pattern_5.ipynb` are also provided.
+* We analyse PGExplainer's shortcut problem in `notebooks/pge_shortcut.ipynb`.
 * We analyse results of the "atypical" whiteboxes (i.e. the ones with different weight settings) in
-  `results_for_atypical_whiteboxes.ipynb`.
-* We calculate correlation between original and relaxed SMARTS in `smarts_correlation.ipynb`.
-* We check for any differences in ground truth after relaxation of SMARTS for Pattern 3 and 5 in `gt_match.ipynb`.
+  `notebooks/results_for_atypical_whiteboxes.ipynb`.
+* We calculate correlation between original and relaxed SMARTS in `notebooks/smarts_correlation.ipynb`.
+* We check for any differences in ground truth after relaxation of SMARTS for Pattern 3 and 5 in `notebooks/gt_match.ipynb`.
+
+## Acknowledgements
+
+This work was funded by "Interpretable and Interactive Multimodal Retrieval in Drug Discovery" project. The
+„Interpretable and Interactive Multimodal Retrieval in Drug Discovery” project (FENG.02.02-IP.05-0040/23) is carried out
+within the First Team programme of the Foundation for Polish Science co-financed by the European Union under the
+European Funds for Smart Economy 2021-2027 (FENG).
+
+## Environmental statement
+
+### Number of pretrained models used
+
+We did not use any pretrained models for this work.
+
+### Number of models trained from scratch
+
+We do not train any GNNs or Transformers from scratch, and we do not train any compute-intensive deep learning model for
+this work. However, for transparency purposes, we would like to note that during the course
+of this work, we've created:
+
+* A dozen _handmade_ GNN models. These had their weights set manually by a human and were not computationally trained on
+  either a CPU or a GPU. As such, we don't classify them as `trained from scratch`, as they were not trained in the traditional sense.
+  Their weights are defined in the `mpnn/molecule_{letter}_detector.py` files.
+* During the course of this work, we've used PGExplainer [1]. PGExplainer is a common graph explainability method, which is based on a small
+  Multi-Layer Perceptron (MLP), which is technically a model and requires training (
+  see [documentation](https://pytorch-geometric.readthedocs.io/en/2.5.1/_modules/torch_geometric/explain/algorithm/pg_explainer.html#PGExplainer.train)).
+  Training implementation can be found in `xai_methods/pyg_attributions.py` in the `PGExplainerAttributionMethod` class. Many PGExplainers were trained during the course of this work; however, because of their tiny size and the fact that they were trained using only a CPU, we don't classify PGExplainers as "models trained from scratch" metric. 
+
+[1] Luo, D., Cheng, W., Xu, D., Yu, W., Zong, B., Chen, H., & Zhang, X. (2020). Parameterized explainer for graph neural
+network. Advances in neural information processing systems, 33, 19620-19631.

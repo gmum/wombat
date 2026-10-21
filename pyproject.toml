@@ -1,7 +1,7 @@
 [project]
-name = "wombat"
-version = "0.1.0"
-description = "Add your description here"
+name = "wombat-gnn"
+version = "1.0.0"
+description = "WOMBAT: Whitebox Oracle for Molecular Benchmarking and Attribution Testing"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -39,4 +39,4 @@ explicit = true
 pyg-lib = { index = "pyg-cu130" }
 torch-scatter = { index = "pyg-cu130" }
 torch-sparse = { index = "pyg-cu130" }
-dive-into-graphs = { path = "vendor/DIG" }
+dive-into-graphs = { path = "vendor/DIG" } # We do it this way, because we've modified the source code of DIG to avoid a dependency problem. This effectively breaks part of DIG! We use DIG only for SubgraphX implementation, however.

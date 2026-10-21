@@ -1,0 +1,2 @@
+Positive samples: 10000
+Random negative samples: 10000
