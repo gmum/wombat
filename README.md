@@ -7,6 +7,106 @@ The paper is available here: https://arxiv.org/abs/2610.00713
 
 ![WOMBAT Teaser](images/wombat_teaser.png)
 
+## License
+
+WOMBAT is licensed under the MIT License, except for third-party code in the `vendor/` directory.
+
+The `vendor/DIG/` directory contains a slightly modified version of the DIG library, licensed under the **GNU General Public License, Version 3 (GPLv3)**. Its license can be found in `vendor/DIG/LICENSE`.
+
+We use DIG exclusively for its implementation of SubgraphX, one of the XAI methods benchmarked in WOMBAT.
+
+## Example code
+
+### Using WOMBAT whiteboxes
+
+```python
+from rdkit import Chem
+
+from wombat.mpnn import Pattern12Detector
+from wombat.mpnn import mol_to_torch
+
+model = Pattern12Detector() # By default, we use the r2 readout.
+
+mol1 = Chem.MolFromSmiles("CC=O") # Will activate the model
+mol2 = Chem.MolFromSmiles("CC(C)=O") # Will not activate the model
+
+x, edge_index, edge_features = mol_to_torch(mol1)
+print(model(x, edge_features, edge_index)) # Output: 1.0
+
+x, edge_index, edge_features = mol_to_torch(mol2)
+print(model(x, edge_features, edge_index)) # Output: 0.0
+```
+
+### Using XAI methods to explain WOMBAT whiteboxes
+
+```python
+import torch
+
+from rdkit import Chem
+from matplotlib import pyplot as plt
+
+from wombat.mpnn import Pattern12Detector
+from wombat.mpnn import mol_to_torch
+from wombat.visualisation import visualize_atom_importance_from_mol
+
+from wombat.xai_methods import IGAttributionMethod
+from wombat.krfp_models import name_to_post_smarts
+
+model = Pattern12Detector()
+mol = Chem.MolFromSmiles("FNC=O")
+x, edge_index, edge_features = mol_to_torch(mol)
+
+ig_explainer = IGAttributionMethod(
+    model=model,
+    model_smarts=name_to_post_smarts["Pattern 12"],
+    positive_smiles=[], # Required by the API, but not needed for IG. It's only for methods that need training beforehand.
+    negative_smiles=[],
+)
+
+atom_importance, _ = ig_explainer.explain(x, edge_features, edge_index)
+atom_importance = torch.sum(torch.abs(atom_importance), dim=1).cpu().numpy().tolist()
+
+img = visualize_atom_importance_from_mol(
+    mol,
+    atom_importance,
+    length=1000,
+)
+
+plt.imshow(img)
+plt.axis('off')
+plt.show()
+```
+
+### Evaluating XAI methods
+
+```python 
+from wombat.mpnn import Pattern12Detector
+from wombat.xai_methods import IGAttributionMethod
+from wombat.krfp_models import name_to_post_smarts
+from wombat.xai_testers import PositiveExplainabilityMethodTester
+
+model = Pattern12Detector()
+
+ig_explainer = IGAttributionMethod(
+    model=model,
+    model_smarts=name_to_post_smarts["Pattern 12"],
+    positive_smiles=[], # Required by the API, but not needed for IG. It's only for methods that need training beforehand.
+    negative_smiles=[],
+)
+
+tester = PositiveExplainabilityMethodTester(
+    model=model,
+    smiles_list=["FNC=O", "CCC=O"],
+    pattern_smarts=name_to_post_smarts["Pattern 12"]
+)
+
+aurocs, aps, ap_baselines, node_attrs_all_positive, edge_attrs_all_positive = tester.evaluate_explainability_method(
+    ig_explainer
+)
+
+print(aurocs) # [1.0, 1.0]
+```
+
 ## Dataset
 
 The dataset used for validating the whiteboxes (sourced from PubChem, as described in the paper) can be found

@@ -1,8 +1,6 @@
 import torch.nn
 
-from wombat.mpnn import MPNN
 from wombat.mpnn.molecule_c_detector import MoleculeCDetector
-from wombat.mpnn.molecule_d_detector import MoleculeDDetector
 from wombat.mpnn.molecule_e_detector import MoleculeEDetector
 from wombat.mpnn.molecule_f_detector import MoleculeFDetector
 from wombat.mpnn.molecule_g_detector import MoleculeGDetector
